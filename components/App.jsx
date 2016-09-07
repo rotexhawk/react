@@ -1,61 +1,64 @@
 import React from 'react'; 
-import Profile from 'Profile.jsx';
-import AddProfile from 'AddProfile.jsx';
 
-import {getProfiles} from '../utils/profileApi.js'; 
+import Chess from '../Models/Chess.js'; 
+
+import Square from 'Square.jsx';
+
+
 
 export default class App extends React.Component {
   constructor(){ // constructor(props)
   	super(); 	// super(props) 
   	this.state = {
-  		profiles: []
+  		chessBoard:[]
   	}
-  	this.addUser = this.addUser.bind(this)
+  	
   }
 
 /** some initial state -> don't use for ajax. **/
   componentWillMount(){
-    console.log('componenet will mount called');
+      const chess = new Chess();
+      this.setState({
+          chessBoard: chess.getBoard(), 
+      });
+    
   }
 
   componentDidMount(){
-   getProfiles()
-   .then(profiles=>{
-      this.setState({
-        profiles: profiles
-      })
-    })
+ 	 
+
   }
 
   componentWillUnmount(){
     console.log('component unmount called');
   }
 
-  addUser(newProfile){
-  	this.setState({
-      profiles: this.state.profiles.concat([newProfile])
-    });
-
-  }
-
 
  
   render(){
-  	let profiles = this.state.profiles.map(profile =>{
-  		return (
-	  			<Profile
-	  			name={profile.name}
-	  			age={profile.age}
-	  			bio={profile.bio}
-	  			hobbies={profile.hobbies} />
-	  			)
-  	});
- 		return(
- 			<div>
-	 			{profiles}
-	 			<AddProfile addUser={this.addUser} />
-	 		</div>			
- 		); 
+  	console.log(this.state);
+  	 let squares = this.state.chessBoard.getSquares().map(square =>{
+  	 	return(
+  	 			<Square 
+  	 				name = {square.name}
+  	 				image = {square.image} 
+  	 				belongsTo = {square.belongsTo}
+  	 				dataProp = {square.dataProp}
+  	 				numeric = {square.numeric}
+  	 				ascii = {square.ascii}
+  	 			/>
+  	 		);
+
+  	 	});	 
+
+  	 	return(
+  	 		<div>
+  	 			<ul>
+  	 				{squares}
+  	 			</ul>
+  	 		</div>
+  	 	);
   }
+
 
 }

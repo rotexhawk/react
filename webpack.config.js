@@ -3,7 +3,6 @@ var path = require('path')
 module.exports = {
 	entry: './main.js',
 	output:{
-		path: './', 
 		filename: 'index.js'
 	}, 
 	devServer: {
@@ -12,8 +11,7 @@ module.exports = {
 	}, 
 	resolve: {
 		root:[
-			path.resolve('./components'), 
-			path.resolve('./utils')
+			path.resolve('./components')
 		]
 	},
 	module: {

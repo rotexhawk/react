@@ -41,13 +41,13 @@ export default class AddProfile extends React.Component{
 			hobbies: [this.state.hobby]
 		}
 		this.props.addUser(newProfile);
+
 	}
 
 	render(){
 		return(
 			<div>
-				<p>Add a new Profile</p>
-				
+				<p>Add a new Profile</p>	
 				<input onChange={this.handlename} value={this.state.name} />
 				<input onChange={this.handleBio} value={this.state.bio} />
 				<input onChange={this.handleHobby} value={this.state.hobby} />
