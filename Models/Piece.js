@@ -1,12 +1,13 @@
 export default class Piece{
 
-	constructor(name,image,belongsTo,dataProp,ascii,numeric){
+	constructor(name,image,belongsTo,dataProp,ascii,numeric,alpha){
 		this.name = name; 
 		this.image = image; 
 		this.dataProp = dataProp; 
+		this.belongsTo = belongsTo;
 		this.ascii = this.setAscii(ascii); 
 		this.numeric = this.setNumeric(numeric);
-		this.belongsTo = belongsTo;
+		this.alpha = this.setAlpha(alpha); 
 	}
 
 	setAscii(ascii){
@@ -22,8 +23,20 @@ export default class Piece{
 		}
 		return numeric; 
 	}
+
+	setAlpha(alpha){
+		if (alpha === undefined){
+		   return this.dataProp.split('')[0];
+		}
+		return alpha; 
+	}
+	
 	setBackground(color){
 		this.background = color; 
+	}
+
+	setIndex(index){
+		this.index = index; 
 	}
 
 

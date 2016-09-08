@@ -9,10 +9,15 @@ export default class Chess{
 		this.currentPlayer = this.players[0]; 
 
 		this.board = new Board(this.getCurrentPlayer(),this.getOppositePlayer()); 
+
+		this.isSecondClick = false; 
+
+		this.moveRange = [];
+
 	}
 
 	getBoard(){
-		return this.board; 
+		return this.board.getSquares(); 
 	}
 
 
@@ -31,6 +36,49 @@ export default class Chess{
 		}
 		return this.players[0];
 	}
+
+	notify(start){
+		if (!this.isSecondClick){
+			this.selectedPiece = this.board.getPieceAtSquare(start.dataset.square); 
+			this.setHighlightArea(this.selectedPiece); 
+			this.board.highlight(this.moveRange); 
+		}
+		return this; 
+	}
+
+	setHighlightArea(piece){
+		if (piece.name === 'pawn'){
+			this.setPawnRange(piece); 
+		}
+	}
+
+	setPawnRange(piece){
+		var range = piece.belongsTo === 'player1' ? 1 : -1; 
+
+		if (!this.getCurrentPlayer().hasMadeFirstMove){
+			range *= 2; 
+		}	
+		this.computeVerticalRange(piece,range); 
+	}
+
+
+	computeVerticalRange(piece,range){
+
+		for (let i = piece.numeric+1; i <= piece.numeric + range; i++){
+
+			 let returnPiece = this.board.getPieceAtSquare(piece.alpha + i); 
+			 
+			 if (returnPiece.belongsTo === this.getCurrentPlayer()){
+			 	break; 
+			 }
+
+			this.moveRange.push(returnPiece); 
+		}
+
+		this.moveRange.push(piece); 
+	}
+
+
 
 
 }

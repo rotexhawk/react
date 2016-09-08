@@ -9,17 +9,20 @@ import Square from 'Square.jsx';
 export default class App extends React.Component {
   constructor(){ // constructor(props)
   	super(); 	// super(props) 
+    
   	this.state = {
-  		chessBoard:[]
+      chess: {},
   	}
+
+   this.handleClick = this.handleClick.bind(this);
   	
   }
 
 /** some initial state -> don't use for ajax. **/
   componentWillMount(){
-      const chess = new Chess();
+   
       this.setState({
-          chessBoard: chess.getBoard(), 
+          chess: new Chess()
       });
     
   }
@@ -33,15 +36,28 @@ export default class App extends React.Component {
     console.log('component unmount called');
   }
 
+  handleClick(e){
+    let targetElm = e.target; 
+    if (targetElm.parentElement.nodeName === 'LI'){
+      targetElm = e.target.parentElement; 
+    }
+
+    this.setState({
+        chess: this.state.chess.notify(targetElm)
+    });
+    
+  }
+
 
  
   render(){
   	console.log(this.state);
-  	 let squares = this.state.chessBoard.getSquares().map((square,index) =>{
+  	 let squares = this.state.chess.getBoard().map(square =>{
 
   	 	return(
   	 			<Square 
-            index = {index}
+            key = {square.index}
+            index = {square.index}
   	 				name = {square.name}
   	 				image = {square.image} 
   	 				belongsTo = {square.belongsTo}
@@ -49,6 +65,7 @@ export default class App extends React.Component {
   	 				numeric = {square.numeric}
   	 				ascii = {square.ascii}
             background = {square.background}
+            onClick={this.handleClick}
   	 			/>
   	 		);
 

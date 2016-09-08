@@ -1,19 +1,25 @@
 import React from 'react';
 
-let Square = props =>{
+export default class Square extends React.Component{
 	
+	constructor(){
+		super();
+	}
+
+	render(){
 	return (
-		<li className={'square item-' + props.index} data-square={props.dataProp}
-		style={{background: props.background }}
-		>
-			{ 
-			props.image ?
-			<img className={props.belongTo} src={'/images/' + props.image}></img>
-			: ''
-			}
-		</li>
-	);
-};
+			<li className={'square item-' + this.props.index} 
+			data-square={this.props.dataProp}
+			style={{background: this.props.background }}
+			onClick={this.props.onClick}
+			>
+				{ 
+				this.props.image ?
+				<img className={this.props.belongTo} src={'/images/' + this.props.image}></img>
+				: ''
+				}
+			</li>
+		);
+	}
 
-export default Square;
-
+}

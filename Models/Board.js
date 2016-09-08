@@ -17,8 +17,10 @@ export default class Board{
 
 		this.squarePosition = {num: 8, alpha:97};  
 		this.labelPosition = {num: 8, alpha: 97};
+		this.player1 = player1; 
+		this.player2 = player2; 
 
-		this.setupSquares(player1,player2);
+		this.setupSquares();
 		
 	}
 
@@ -29,12 +31,13 @@ export default class Board{
 			
 			let dataProp = this.getDataProp(i);
 			
-			let piece = player1.getPieceAt(dataProp) || player2.getPieceAt(dataProp);
+			let piece = this.player1.getPieceAt(dataProp) || this.player2.getPieceAt(dataProp);
 			if (!piece){
 				piece = new Piece(undefined,undefined,undefined,dataProp); 
 			} 
 			
 			piece.setBackground(this.getPieceBackground(count));
+			piece.setIndex(count); 
 			this.squares.push(piece);
 			count++; 
 		}
@@ -42,17 +45,16 @@ export default class Board{
 	}
 
 
-
 	getSquares(){
 		return this.squares; 
 	}
 
 	getPieceBackground(index){
-	if (index > 0 &&index % 8 === 0){
+	if (index > 0 && index % 8 === 0){
 		this.defaultSettings.colors.reverse();
 	}
 	return this.defaultSettings.colors[index % 2];
-}
+	}
 
 
 	// set the data-square index ie a8, b7, etc so we know which item is on which square
@@ -67,6 +69,25 @@ export default class Board{
 		
 		return str; 
 	}
+
+
+	highlight(pieceArray){
+		pieceArray.forEach(piece => {
+			piece.setBackground('blue');
+			this.squares[piece.index] = piece;  
+		});
+	}
+
+
+	getPieceAtSquare(dataProp){
+		return this.squares.find(piece => {
+				return piece.dataProp === dataProp; 
+		}); 
+	}
+
+
+
+
 
 
 	/**
