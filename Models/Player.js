@@ -10,12 +10,10 @@ export default class Player{
 	}
 
 	getPieceAt(dataProp){
-		return this.pieces.reduce((prev,next) => {
-			if (next.dataProp === dataProp){
-				return next; 
-			}
-		},this.pieces[0]); 
-		
+		return this.pieces.find(piece => {
+				
+				return piece.dataProp === dataProp; 
+		}); 
 	}
 
 }

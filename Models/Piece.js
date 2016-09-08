@@ -4,9 +4,9 @@ export default class Piece{
 		this.name = name; 
 		this.image = image; 
 		this.dataProp = dataProp; 
-		this.asciii = this.setAscii(ascii); 
+		this.ascii = this.setAscii(ascii); 
 		this.numeric = this.setNumeric(numeric);
-		this.belongsTo = belongsTo;  
+		this.belongsTo = belongsTo;
 	}
 
 	setAscii(ascii){
@@ -21,6 +21,9 @@ export default class Piece{
 			return parseInt(this.dataProp.split('')[1]);
 		}
 		return numeric; 
+	}
+	setBackground(color){
+		this.background = color; 
 	}
 
 

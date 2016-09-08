@@ -37,22 +37,25 @@ export default class App extends React.Component {
  
   render(){
   	console.log(this.state);
-  	 let squares = this.state.chessBoard.getSquares().map(square =>{
+  	 let squares = this.state.chessBoard.getSquares().map((square,index) =>{
+
   	 	return(
   	 			<Square 
+            index = {index}
   	 				name = {square.name}
   	 				image = {square.image} 
   	 				belongsTo = {square.belongsTo}
   	 				dataProp = {square.dataProp}
   	 				numeric = {square.numeric}
   	 				ascii = {square.ascii}
+            background = {square.background}
   	 			/>
   	 		);
 
   	 	});	 
 
   	 	return(
-  	 		<div>
+  	 		<div id="chessBoard">
   	 			<ul>
   	 				{squares}
   	 			</ul>

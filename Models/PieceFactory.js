@@ -19,7 +19,7 @@ export default class PieceFactory{
 					},
 					{
 						name: 'knight', 
-						images: 'bN.png', 
+						image: 'bN.png', 
 						positions: ['b8','g8']
 					}, 
 					{
@@ -55,7 +55,7 @@ export default class PieceFactory{
 					},
 					{
 						name: 'knight', 
-						images: 'wN.png', 
+						image: 'wN.png', 
 						positions: ['b1','g1']
 					}, 
 					{

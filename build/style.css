@@ -1,0 +1,71 @@
+
+#app{
+	width: 1200px;
+	box-shadow: 5px 5px 35px 0px rgba(0,0,0,0.4);
+	-webkit-box-shadow: 5px 5px 35px 0px rgba(0,0,0,0.4);
+	-moz-box-shadow: 5px 5px 35px 0px rgba(0,0,0,0.4);
+	overflow: hidden;
+	margin: 0 auto; 
+	padding: 5%;
+	position: relative;
+	height: 2000px;
+}
+
+#chessBoard{
+	width: 500px;
+	height: 500px; 
+	margin: 0 auto; 
+	display: block;  
+}
+
+#chessBoard ul{
+	border: 1px solid gray;
+	list-style-type: none; 
+	margin: 0 auto; 
+	padding: 0;
+	height: 100%; 
+	width: 100%;
+	display: block;
+	box-sizing: border-box;
+}
+
+#chessBoard ul li{
+	display: inline-block;
+	width: calc(100% / 8);
+	height: calc(100% / 8);
+	box-sizing: border-box;
+	float: left;
+	position: relative;
+}
+.label{
+	display: block;
+	-webkit-font-smoothing: antialiased;
+}
+.type-num{
+	margin-left: 3px;
+	margin-top: 2px;
+	position: absolute;
+}
+
+.type-alpha{
+	position: absolute;
+    bottom: 2px;
+    right: 4px;
+}
+
+.square img{
+	margin:  0 auto; 
+	float:  none; 
+	width:  90%; 
+	height: 90%;
+	display: block;
+}
+
+.messageBoard{
+	min-height: 60px;
+	overflow: hidden;
+}
+
+h3{
+	margin: 10px 0;
+}
