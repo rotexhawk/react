@@ -11,7 +11,10 @@ module.exports = {
 	}, 
 	resolve: {
 		root:[
-			path.resolve('./components')
+			path.resolve(__dirname  + '/components'), 
+			path.resolve(__dirname + '/Models'), 
+			path.resolve(__dirname + '/images'), 
+			path.resolve(__dirname + '/node_modules')
 		]
 	},
 	module: {

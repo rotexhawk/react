@@ -4,7 +4,7 @@ import Chess from '../Models/Chess.js';
 
 import Square from 'Square.jsx';
 
-
+import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
 
 export default class App extends React.Component {
   constructor(){ // constructor(props)
@@ -52,6 +52,7 @@ export default class App extends React.Component {
  
   render(){
   	console.log(this.state);
+
   	 let squares = this.state.chess.getBoard().map(square =>{
 
   	 	return(
@@ -74,7 +75,12 @@ export default class App extends React.Component {
   	 	return(
   	 		<div id="chessBoard">
   	 			<ul>
+          <ReactCSSTransitionGroup 
+          transitionName="example" 
+          transitionEnterTimeout={500} 
+          transitionLeaveTimeout={300}>
   	 				{squares}
+          </ReactCSSTransitionGroup>  
   	 			</ul>
   	 		</div>
   	 	);
