@@ -38,15 +38,22 @@ export default class Chess{
 	}
 
 	notify(start){
-		if (!this.isSecondClick){
+		if (this.isSecondClick){
+			this.board.removeHighLight(); 
+			this.isSecondClick = false; 
+		}
+		else{
 			this.selectedPiece = this.board.getPieceAtSquare(start.dataset.square); 
 			this.setHighlightArea(this.selectedPiece); 
 			this.board.highlight(this.moveRange); 
+			this.isSecondClick = true; 
 		}
+
 		return this; 
 	}
 
 	setHighlightArea(piece){
+		this.moveRange = [];
 		if (piece.name === 'pawn'){
 			this.setPawnRange(piece); 
 		}
