@@ -37,16 +37,19 @@ export default class Chess{
 		return this.players[0];
 	}
 
-	notify(start){
+	notify(clickedPiece){
+		clickedPiece = this.board.getPieceAtSquare(clickedPiece.dataset.square); 
 		if (this.isSecondClick){
 			this.board.removeHighLight(); 
+			this.movePiece(clickedPiece); 
 			this.isSecondClick = false; 
 		}
 		else{
-			this.selectedPiece = this.board.getPieceAtSquare(start.dataset.square); 
+			this.selectedPiece = clickedPiece;  
 			this.setHighlightArea(this.selectedPiece); 
 			this.board.highlight(this.moveRange); 
 			this.isSecondClick = true; 
+			
 		}
 
 		return this; 
@@ -78,6 +81,10 @@ export default class Chess{
 			 if (returnPiece.belongsTo === this.getCurrentPlayer()){
 			 	break; 
 			 }
+			 else if (returnPiece.belongsTo === this.getOppositePlayer()){
+			 	this.moveRange.push(returnPiece); 
+			 	break; 
+			 }
 
 			this.moveRange.push(returnPiece); 
 		}
@@ -85,6 +92,17 @@ export default class Chess{
 		this.moveRange.push(piece); 
 	}
 
+	movePiece(clickedPiece){
+	
+		if (this.moveInRange(clickedPiece)){
+			this.board.swapElement(this.selectedPiece, clickedPiece);
+		}
+	}
+
+	moveInRange(piece){
+		
+		return this.moveRange.find(elm => elm.index === piece.index);
+	}
 
 
 

@@ -51,6 +51,31 @@ export default class Board{
 		return this.squares; 
 	}
 
+	getElement(index){
+		return this.squares[index];
+	}
+
+	updateElement(...elements){
+		elements.forEach(element => { this.squares[element.index] = element} );
+	}
+
+
+	swapElement(prev,next){
+
+		next.belongsTo = prev.belongsTo; 
+		next.image = prev.image; 
+		next.name = prev.image; 
+		
+		prev.belongsTo = undefined; 
+		prev.image = undefined; 
+		prev.name = undefined; 	
+
+
+		this.updateElement(prev,next);
+
+	}
+
+
 	getPieceBackground(index){
 	if (index > 0 && index % 8 === 0){
 		this.defaultSettings.colors.reverse();

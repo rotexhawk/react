@@ -6,6 +6,8 @@ export default class Square extends React.Component{
 		super();
 	}
 
+
+
 	render(){
 	return (
 			<li className={'square item-' + this.props.index} 
