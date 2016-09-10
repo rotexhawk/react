@@ -15,7 +15,7 @@ export default class Board{
 			showPath: true
 		};
 
-		this.squarePosition = {num: 8, alpha:97};  
+		
 		this.labelPosition = {num: 8, alpha: 97};
 		this.player1 = player1; 
 		this.player2 = player2; 
@@ -26,7 +26,8 @@ export default class Board{
 		
 	}
 
-	setupSquares(player1,player2){
+	setupSquares(){
+		this.squarePosition = {num: 8, alpha:97};  
 		this.squares = []
 		let count = 0; 
 		for (let i = 1; i < 65; i++){
@@ -60,19 +61,14 @@ export default class Board{
 	}
 
 
-	swapElement(prev,next){
-
-		next.belongsTo = prev.belongsTo; 
-		next.image = prev.image; 
-		next.name = prev.image; 
+	movePiece(prev,next){
 		
-		prev.belongsTo = undefined; 
-		prev.image = undefined; 
-		prev.name = undefined; 	
+		if (next.belongsTo){
+			this[next.belongsTo].pieces = this[next.belongsTo].pieceEaten(next);
+		}
 
-
-		this.updateElement(prev,next);
-
+		var swappedArray = this[prev.belongsTo].movePiece(prev,next);
+		this.updateElement(...swappedArray);
 	}
 
 
