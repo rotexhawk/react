@@ -66,6 +66,7 @@ export default class App extends React.Component {
   	 				numeric = {square.numeric}
   	 				ascii = {square.ascii}
             background = {square.background}
+            isHighLighted = {square.isHighLighted}
             onClick={this.handleClick}
   	 			/>
   	 		);
@@ -75,12 +76,7 @@ export default class App extends React.Component {
   	 	return(
   	 		<div id="chessBoard">
   	 			<ul>
-          <ReactCSSTransitionGroup 
-          transitionName="example" 
-          transitionEnterTimeout={500} 
-          transitionLeaveTimeout={300}>
   	 				{squares}
-          </ReactCSSTransitionGroup>  
   	 			</ul>
   	 		</div>
   	 	);

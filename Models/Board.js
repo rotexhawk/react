@@ -85,10 +85,15 @@ export default class Board{
 	}
 
 	getBackgroundByNeighbor(piece){
+		
+
 		let index = -1; // get left piece 
-		if (piece.index % 8 === 0){
+
+		if (piece.index-1 % 8 === 0){
 			index = 1; 
 		}
+		console.log(index)
+		console.log(piece.index, piece);
 		
 		return this.getOppositeBackground(this.squares[piece.index + index].background); 
 	}
@@ -110,16 +115,17 @@ export default class Board{
 
 
 	highlight(pieceArray){
+		this.removeHighLight(); 
 		this.highlightedPieces = pieceArray; 
 		this.highlightedPieces.forEach(piece => {
-			piece.setBackground('blue');
+			piece.isHighLighted = true;
 			this.squares[piece.index] = piece;  
 		});
 	}
 
 	removeHighLight(){
 		this.highlightedPieces.forEach(piece => {
-			piece.setBackground(this.getBackgroundByNeighbor(piece)); 
+			piece.isHighLighted = false; 
 			this.squares[piece.index] = piece; 
 		});
 	}
@@ -133,6 +139,9 @@ export default class Board{
 		}); 
 	}
 
+	getPieceAtAsciiNumeric(ascii,numeric){
+		return this.squares.find(piece => piece.ascii === ascii && piece.numeric === numeric);
+	}
 
 
 
