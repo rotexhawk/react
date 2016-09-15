@@ -1,4 +1,6 @@
 import PieceFactory from '../Models/PieceFactory.js'; 
+
+
 export default class Player{
 
 	constructor(name){
@@ -8,6 +10,10 @@ export default class Player{
 	}
 	getPieces(){
 		return this.pieces;
+	}
+
+	setPieces(newPieces){
+		this.pieces = newPieces;
 	}
 
 	getPieceAt(dataProp){
@@ -46,6 +52,8 @@ export default class Player{
 		this.pieces.splice(index,1);
 		return this.pieces; 
 	}
+
+
 
 
 }

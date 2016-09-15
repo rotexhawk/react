@@ -53,7 +53,7 @@ export default class App extends React.Component {
   render(){
   	console.log(this.state);
 
-  	 let squares = this.state.chess.getBoard().map(square =>{
+  	 let squares = this.state.chess.getBoardPieces().map(square =>{
 
   	 	return(
   	 			<Square 

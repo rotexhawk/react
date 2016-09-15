@@ -20,7 +20,7 @@ export default class Board{
 		this.player1 = player1; 
 		this.player2 = player2; 
 
-		this.highlightedPieces = [];
+		this.highlightedPieces = new Set();
 
 		this.setupSquares();
 		
@@ -84,22 +84,6 @@ export default class Board{
 		return this.defaultSettings.colors[oppIndex];
 	}
 
-	getBackgroundByNeighbor(piece){
-		
-
-		let index = -1; // get left piece 
-
-		if (piece.index-1 % 8 === 0){
-			index = 1; 
-		}
-		console.log(index)
-		console.log(piece.index, piece);
-		
-		return this.getOppositeBackground(this.squares[piece.index + index].background); 
-	}
-
-
-
 	// set the data-square index ie a8, b7, etc so we know which item is on which square
 	getDataProp(index){
 		var str = String.fromCharCode(this.squarePosition.alpha) + this.squarePosition.num; 
@@ -114,9 +98,10 @@ export default class Board{
 	}
 
 
-	highlight(pieceArray){
+	highlight(piece){
 		this.removeHighLight(); 
-		this.highlightedPieces = pieceArray; 
+		this.highlightedPieces = piece.range; 
+		this.highlightedPieces.add(piece); 
 		this.highlightedPieces.forEach(piece => {
 			piece.isHighLighted = true;
 			this.squares[piece.index] = piece;  
