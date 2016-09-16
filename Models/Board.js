@@ -20,8 +20,6 @@ export default class Board{
 		this.player1 = player1; 
 		this.player2 = player2; 
 
-		this.highlightedPieces = new Set();
-
 		this.setupSquares();
 		
 	}
@@ -100,16 +98,16 @@ export default class Board{
 
 	highlight(piece){
 		this.removeHighLight(); 
-		this.highlightedPieces = piece.range; 
-		this.highlightedPieces.add(piece); 
-		this.highlightedPieces.forEach(piece => {
-			piece.isHighLighted = true;
-			this.squares[piece.index] = piece;  
+		piece.range.forEach(rangePiece => {
+			rangePiece.isHighLighted = true;
+			this.squares[rangePiece.index] = rangePiece;  
 		});
+		piece.isHighLighted = true; 
+		this.squares[piece.index] = piece; 
 	}
 
 	removeHighLight(){
-		this.highlightedPieces.forEach(piece => {
+		this.squares.forEach(piece => {
 			piece.isHighLighted = false; 
 			this.squares[piece.index] = piece; 
 		});

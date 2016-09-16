@@ -54,8 +54,15 @@ export default class Chess{
 	}
 
 	notify(clickedPiece){
+		debugger; 
+		
 		clickedPiece = this.board.getPieceAtSquare(clickedPiece.dataset.square); 
-			
+		
+		this.rangeGenerator.computeRange(this.getBoard(), this.getOppositePlayer(), this.getCurrentPlayer());
+
+		this.rangeGenerator.computeRange(this.getBoard(), this.getCurrentPlayer(), this.getOppositePlayer());
+
+
 		if (this.isSecondClick && clickedPiece.belongsTo !== this.getCurrentPlayer().name){
 			this.board.removeHighLight(); 
 			this.movePiece(clickedPiece); 
@@ -63,18 +70,10 @@ export default class Chess{
 			this.selectedPiece = null; 
 		}
 		else if (this.isPlayersTurn(clickedPiece)){
-	// if moving this piece causes the king to be checked, don't allow the move unless it's to eat that piece
-			// if (this.willBeChecked(clickedPiece)){
-			// 	console.log('this is working');
-			// }
-			
-			this.rangeGenerator.computeRange(this.getBoard(), this.getOppositePlayer(), this.getCurrentPlayer()) 
-
-			this.rangeGenerator.computeRange(this.getBoard(), this.getCurrentPlayer(), this.getOppositePlayer()); 
-
-			this.board.highlight(clickedPiece); 
 
 			this.selectedPiece = clickedPiece;  
+ 
+			this.board.highlight(clickedPiece); 
 
 			this.isSecondClick = true; 
 		}

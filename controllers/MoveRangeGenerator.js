@@ -62,25 +62,18 @@ export default class MoveRangeGenerator{
 		if (kingPiece.range.length === 0){
 			return; 
 		}
-
-		// console.log('something is wrong', kingPiece.range);
-	
-		
-
 			this.getOppositePlayer().getPieces().forEach(oppositePiece =>{
-				// if (oppositePiece.belongsTo === 'player2' && oppositePiece.name === 'queen'){
-				// 	debugger; 
-				// }
 				kingPiece.range.forEach(rangePiece =>{
-				if (this.pieceInRange(oppositePiece.range, rangePiece)){					
-					
-					kingPiece.range.delete(rangePiece);
-					this.moveRange.delete(rangePiece);
-				}
-			})
+				oppositePiece.range.forEach(oppRange =>{
+					if (oppRange.dataProp === rangePiece.dataProp){
+						console.log('found it', oppRange);
+						kingPiece.range.delete(rangePiece); 
+						this.moveRange.delete(rangePiece);
+					}
+				});	
+				
+			});
 		}); 
-		
-	//	this.moveRange = kingPiece.range; 
 
 	}
 
