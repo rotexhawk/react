@@ -58,24 +58,40 @@ export default class MoveRangeGenerator{
 	}
 
 	removeKingCheckPiecesFromRange(kingPiece){
-		console.log(kingPiece);
-		if (!kingPiece.range){
+
+		if (kingPiece.range.length === 0){
 			return; 
 		}
-		kingPiece.range.forEach(rangePiece =>{
+
+		// console.log('something is wrong', kingPiece.range);
+	
+		
+
 			this.getOppositePlayer().getPieces().forEach(oppositePiece =>{
-				if (oppositePiece.range && oppositePiece.range.has(rangePiece)){
-					console.log('found it', rangePiece);
+				// if (oppositePiece.belongsTo === 'player2' && oppositePiece.name === 'queen'){
+				// 	debugger; 
+				// }
+				kingPiece.range.forEach(rangePiece =>{
+				if (this.pieceInRange(oppositePiece.range, rangePiece)){					
+					
 					kingPiece.range.delete(rangePiece);
+					this.moveRange.delete(rangePiece);
 				}
 			})
 		}); 
 		
-		this.moveRange = kingPiece.range; 
+	//	this.moveRange = kingPiece.range; 
 
 	}
 
-
+	pieceInRange(range,piece){
+		for (let rangePiece of range){
+			if (rangePiece.dataProp === piece.dataProp){
+				return true; 
+			}
+		}
+		return false; 
+	}
 
 
 	computeRookRange(piece,range){

@@ -1,6 +1,6 @@
 export default class Piece{
 
-	constructor(name,image,belongsTo,dataProp,ascii,numeric,alpha){
+	constructor(name,image,belongsTo,dataProp,ascii,numeric,alpha,range){
 		this.name = name; 
 		this.image = image; 
 		this.dataProp = dataProp; 
@@ -8,6 +8,14 @@ export default class Piece{
 		this.ascii = this.setAscii(ascii); 
 		this.numeric = this.setNumeric(numeric);
 		this.alpha = this.setAlpha(alpha); 
+		this.range = this.setRange(range);
+	}
+
+	setRange(range){
+		if (range === undefined){
+			return new Set(); 
+		}
+		return range; 
 	}
 
 	setAscii(ascii){
@@ -30,6 +38,8 @@ export default class Piece{
 		}
 		return alpha; 
 	}
+
+
 	
 	setBackground(color){
 		this.background = color; 

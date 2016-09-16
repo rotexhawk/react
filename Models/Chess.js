@@ -67,8 +67,10 @@ export default class Chess{
 			// if (this.willBeChecked(clickedPiece)){
 			// 	console.log('this is working');
 			// }
+			
+			this.rangeGenerator.computeRange(this.getBoard(), this.getOppositePlayer(), this.getCurrentPlayer()) 
+
 			this.rangeGenerator.computeRange(this.getBoard(), this.getCurrentPlayer(), this.getOppositePlayer()); 
-			this.rangeGenerator.computeRange(this.getBoard(), this.getOppositePlayer(), this.getCurrentPlayer()); 
 
 			this.board.highlight(clickedPiece); 
 
