@@ -11,22 +11,33 @@ export default class MoveRangeGenerator{
 	}
 
 	getOppositePlayer(){
-		return this.oppositePlayer; 
+		if (this.currentPlayer.name === 'player1'){
+			return this.players[1];
+		}
+		return this.players[0];
 	}
 
-	computeRange(board, currentPlayer, oppositePlayer){
+	switchPlayer(){
+		this.currentPlayer = this.getOppositePlayer(); 
+	}
+
+	computeRange(board, currentPlayer, oppositePlayer, checkStatus){
 		this.board = board; 
+
+		this.players = [currentPlayer, oppositePlayer]; 
+
 		this.currentPlayer = currentPlayer; 
 		this.oppositePlayer = oppositePlayer; 
 
 		let newPieces = this.currentPlayer.getPieces().map(piece =>{
-			piece.range = this.getRangeForPiece(piece); 
+			piece.range = this.getRangeForPiece(piece, checkStatus); 
 			return piece; 
 		});
+
 		this.currentPlayer.setPieces(newPieces); 
 	}
 
-	getRangeForPiece(piece){
+	getRangeForPiece(piece, checkStatus){
 		this.moveRange = new Set(); 
 		if (piece.name === 'pawn'){
 			this.setPawnRange(piece);
@@ -46,8 +57,23 @@ export default class MoveRangeGenerator{
 		if (piece.name === 'king'){
 			this.computeKingMove(piece);
 		}
-
+		if (checkStatus){
+			this.removeMovesCausesCheck(piece);  
+		}
 		return this.moveRange; 
+	}
+
+
+	reComputeRangeForPieces(pieces){
+		this.realRange = this.moveRange; 
+
+		pieces.forEach(piece => { 
+			this.switchPlayer(); 
+			this.getRangeForPiece(piece);
+			this.switchPlayer();  
+		});
+
+		this.moveRange = this.realRange; 
 	}
 
 
@@ -57,34 +83,82 @@ export default class MoveRangeGenerator{
 		this.removeKingCheckPiecesFromRange(piece); 
 	}
 
-	removeKingCheckPiecesFromRange(kingPiece){
 
-		if (kingPiece.range.length === 0){
+
+	/** This method is called to remove the pieces where king can be checked from the moveRange set so King is not 
+	* allowed to move to a place where it can be checked. 
+	**/
+	removeKingCheckPiecesFromRange(king){
+		this.moveRange.forEach(kingRangePiece =>{
+			this.getOppositePlayer().getPieces().forEach(oppositePiece =>{
+				oppositePiece.range.forEach(oppRangePiece =>{
+					if (oppRangePiece.dataProp == kingRangePiece.dataProp){
+						this.moveRange.delete(kingRangePiece);
+					}
+				});
+			});
+		});
+	}
+
+
+
+	/** Remove all the moves from a pieces range where moving to that position would cause the king to get checked. Unless 
+	the move will eat the opposing piece, that's causing the check. **/
+	removeMovesCausesCheck(piece){
+
+		let piecesThatCanEatMe = this.findPiecesCanEatMyPiece(piece);
+		
+		this.temporaryRemovePiece(piece); 
+
+		this.reComputeRangeForPieces(piecesThatCanEatMe); 
+
+		let pieceThatCanCheckMe = this.findPiecesCanCheckMe(); 
+
+		//console.log(pieceThatCanCheckMe);
+		this.undoTemporaryRemove(piece); 
+
+		this.updateRange(pieceThatCanCheckMe);
+
+
+	}
+
+	findPiecesCanEatMyPiece(piece){
+		return this.getOppositePlayer().getPieces().filter(oppPiece =>{ // get only pieces that has a range matching our pieces
+				for (let oppRange of oppPiece.range){
+					if (oppRange.dataProp === piece.dataProp){
+						return piece; 
+					}
+				}
+
+		});
+	}
+
+
+	findPiecesCanCheckMe(){
+		let myKing = this.getCurrentPlayer().getKing(); 
+		return this.findPiecesCanEatMyPiece(myKing); 
+	}
+
+
+	updateRange(pieceThatCanCheckMe){
+		if (!pieceThatCanCheckMe.length){
 			return; 
 		}
-			this.getOppositePlayer().getPieces().forEach(oppositePiece =>{
-				kingPiece.range.forEach(rangePiece =>{
-				oppositePiece.range.forEach(oppRange =>{
-					if (oppRange.dataProp === rangePiece.dataProp){
-						console.log('found it', oppRange);
-						kingPiece.range.delete(rangePiece); 
-						this.moveRange.delete(rangePiece);
-					}
-				});	
-				
-			});
-		}); 
-
+		this.moveRange = new Set(); 
+		this.moveRange.add(pieceThatCanCheckMe);
 	}
 
-	pieceInRange(range,piece){
-		for (let rangePiece of range){
-			if (rangePiece.dataProp === piece.dataProp){
-				return true; 
-			}
-		}
-		return false; 
+
+	temporaryRemovePiece(piece){
+		piece.belongsTo = undefined; 
+		this.board.updateElement(piece); 
 	}
+
+	undoTemporaryRemove(piece){
+		piece.belongsTo = this.getCurrentPlayer().name; 
+		this.board.updateElement(piece); 
+	}
+
 
 
 	computeRookRange(piece,range){

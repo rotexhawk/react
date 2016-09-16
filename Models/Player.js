@@ -53,6 +53,10 @@ export default class Player{
 		return this.pieces; 
 	}
 
+	getKing(){
+		return this.pieces.find(piece => piece.name === 'king');
+	}
+
 
 
 

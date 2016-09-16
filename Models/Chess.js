@@ -54,14 +54,8 @@ export default class Chess{
 	}
 
 	notify(clickedPiece){
-		debugger; 
 		
 		clickedPiece = this.board.getPieceAtSquare(clickedPiece.dataset.square); 
-		
-		this.rangeGenerator.computeRange(this.getBoard(), this.getOppositePlayer(), this.getCurrentPlayer());
-
-		this.rangeGenerator.computeRange(this.getBoard(), this.getCurrentPlayer(), this.getOppositePlayer());
-
 
 		if (this.isSecondClick && clickedPiece.belongsTo !== this.getCurrentPlayer().name){
 			this.board.removeHighLight(); 
@@ -70,6 +64,10 @@ export default class Chess{
 			this.selectedPiece = null; 
 		}
 		else if (this.isPlayersTurn(clickedPiece)){
+
+			this.rangeGenerator.computeRange(this.getBoard(), this.getOppositePlayer(), this.getCurrentPlayer());
+
+			this.rangeGenerator.computeRange(this.getBoard(), this.getCurrentPlayer(), this.getOppositePlayer(), true);
 
 			this.selectedPiece = clickedPiece;  
  
@@ -80,51 +78,7 @@ export default class Chess{
 
 		return this; 
 	}
-
 	
-
-
-	computeKingMove(piece,testLoop){
-		this.computeRookRange(piece,1); 
-		this.computeBishopMove(piece,1);
-		if (!testLoop){
-			this.removeKingCheckPiecesFromRange(); 
-		}
-	}
-
-	/** This method is called to remove the pieces where king can be checked from the moveRange set so King is not 
-	* allowed to move to a place where it can be checked. 
-	**/
-	removeKingCheckPiecesFromRange(){
-		this.currentPlayerMoveRange = this.moveRange; 
-
-		this.getOppositePlayer().pieces.forEach(piece =>{
-			this.setHighlightArea(piece,true); 
-			this.moveRange.forEach(movePiece =>{
-				this.currentPlayerMoveRange.forEach(currentPiece =>{
-					if (movePiece.dataProp === currentPiece.dataProp){
-						this.currentPlayerMoveRange.delete(currentPiece);
-					}
-				});
-			});
-		});
-		
-		this.moveRange = this.currentPlayerMoveRange; 
-	}
-
-	willBeChecked(piece){
-		this.setHighlightArea(piece,true); 
-		this.currentPlayerMoveRange = this.moveRange; 
-
-
-
-	}
-
-
-	
-
-
-
 
 	movePiece(clickedPiece){
 	
