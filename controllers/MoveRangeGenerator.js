@@ -72,6 +72,13 @@ export default class MoveRangeGenerator{
 			}
 			else{
 				this.kingChecked(piece, this.isKingChecked());
+				if (piece.name === 'king'){
+					this.removeMovesCausesCheck(piece);
+				}
+			}
+			if (this.isCheckMate()){
+				console.log('You are fucked!');
+				return new Set();
 			}
 		}
 		return this.moveRange; 
@@ -131,20 +138,22 @@ export default class MoveRangeGenerator{
 
 		this.undoTemporaryRemove(piece);
 
-		this.updateRange(pieceThatCanCheckMe);
+		this.updateRange(piece, pieceThatCanCheckMe);
 
 		this.reComputeRangeForPieces(piecesThatCanEatMe);
 
 	}
 
 	findPiecesCanEatMyPiece(piece){
-		return this.getOppositePlayer().getPieces().filter(oppPiece =>{ // get only pieces that has a range matching our pieces
-				for (let oppRange of oppPiece.range){
+		let PiecesCanEatMyPiece = [];
+		this.getOppositePlayer().getPieces().filter(oppPiece =>{ // get only pieces that has a range matching our pieces
+				oppPiece.range.forEach(oppRange => {
 					if (oppRange.dataProp === piece.dataProp){
-						return piece; 
+						PiecesCanEatMyPiece.push(oppPiece);
 					}
-				}
-		});
+				});
+			});
+		return PiecesCanEatMyPiece;
 	}
 
 
@@ -175,12 +184,12 @@ export default class MoveRangeGenerator{
 
 		}
 		else{
-			this.allowPieceToBlockCheck(piece,oppPiecesCausingCheck);
+			this.allowPieceToBlockCheck(oppPiecesCausingCheck);
 		}
 	}
 
 
-	allowPieceToBlockCheck(piece,oppPieceCausingCheck){
+	allowPieceToBlockCheck(oppPieceCausingCheck){
 		this.moveRange.forEach(pieceRange => {
 			oppPieceCausingCheck.forEach(oppPiece => {
 				if (pieceRange.dataProp !== oppPiece.dataProp) {
@@ -188,19 +197,19 @@ export default class MoveRangeGenerator{
 					this.reComputeRangeForPieces([oppPiece]);
 					pieceRange.belongsTo = undefined;
 					if (this.findPiecesCanEatMyPiece(this.getCurrentPlayer().getKing()).length) {
-						console.log('gets here', pieceRange);
 						this.moveRange.delete(pieceRange);
 					}
+					this.reComputeRangeForPieces([oppPiece]);
 				}
 			});
 		});
-		console.log('moveRange', this.moveRange);
+
 	}
 
 
 
 
-	updateRange(pieceThatCanCheckMe){
+	updateRange(piece, pieceThatCanCheckMe){
 		if (!pieceThatCanCheckMe.length){
 			return; 
 		}
@@ -210,10 +219,44 @@ export default class MoveRangeGenerator{
 				if (rangeMove.dataProp !== oppPiece.dataProp){
 					this.moveRange.delete(rangeMove);
 				}
+				else if (piece.name === 'king'){
+					if (this.pieceHasBackup(oppPiece)){
+						this.moveRange.delete(rangeMove);
+					}
+				}
 			}
 		});
 	}
 
+	pieceHasBackup(piece){
+		this.switchPlayer();
+		const tempProp = piece.dataProp;
+		this.temporaryRemovePiece(piece);
+		this.reComputeRangeForPieces(this.getCurrentPlayer().getPieces());
+		var foundIt = false;
+		this.getCurrentPlayer().getPieces().some(currPiece =>{
+				currPiece.range.forEach(rangePiece =>{
+					if (rangePiece.dataProp === tempProp){
+						foundIt = true;
+					}
+				});
+		});
+		this.undoTemporaryRemove(piece);
+		this.reComputeRangeForPieces(this.getCurrentPlayer().getPieces());
+		this.switchPlayer();
+
+		return foundIt;
+	}
+
+	isCheckMate(){
+		let checkMate = true;
+		this.getCurrentPlayer().getPieces().some(currPiece =>{
+				if (currPiece.range.length > 0){
+					checkMate = false;
+				}
+		});
+		console.log('checkMate', checkMate);
+	}
 
 	temporaryRemovePiece(piece){
 		piece.belongsTo = undefined; 
@@ -224,6 +267,7 @@ export default class MoveRangeGenerator{
 		piece.belongsTo = this.getCurrentPlayer().name; 
 		this.board.updateElement(piece); 
 	}
+
 
 
 
