@@ -181,14 +181,20 @@ export default class MoveRangeGenerator{
 
 
 	allowPieceToBlockCheck(piece,oppPieceCausingCheck){
-		piece.range.forEach(pieceRange => {
+		this.moveRange.forEach(pieceRange => {
 			oppPieceCausingCheck.forEach(oppPiece => {
-				pieceRange.belongsTo = this.getCurrentPlayer().name;
-				this.reComputeRangeForPieces(...oppPiece);
-				pieceRange.belongsTo = undefined;
-				if (this.)
-			})
-		})
+				if (pieceRange.dataProp !== oppPiece.dataProp) {
+					pieceRange.belongsTo = this.getCurrentPlayer().name;
+					this.reComputeRangeForPieces([oppPiece]);
+					pieceRange.belongsTo = undefined;
+					if (this.findPiecesCanEatMyPiece(this.getCurrentPlayer().getKing()).length) {
+						console.log('gets here', pieceRange);
+						this.moveRange.delete(pieceRange);
+					}
+				}
+			});
+		});
+		console.log('moveRange', this.moveRange);
 	}
 
 
@@ -198,7 +204,7 @@ export default class MoveRangeGenerator{
 		if (!pieceThatCanCheckMe.length){
 			return; 
 		}
-		console.log(pieceThatCanCheckMe);
+		//console.log(pieceThatCanCheckMe);
 		pieceThatCanCheckMe.forEach(oppPiece => {
 			for (let rangeMove of this.moveRange){
 				if (rangeMove.dataProp !== oppPiece.dataProp){
