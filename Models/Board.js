@@ -77,10 +77,6 @@ export default class Board{
 	return this.defaultSettings.colors[index % 2];
 	}
 
-	getOppositeBackground(color){
-		const oppIndex = this.defaultSettings.colors.indexOf(color) === 0 ? 1 : 0;  
-		return this.defaultSettings.colors[oppIndex];
-	}
 
 	// set the data-square index ie a8, b7, etc so we know which item is on which square
 	getDataProp(index){

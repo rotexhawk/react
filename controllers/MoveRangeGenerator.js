@@ -6,28 +6,37 @@ export default class MoveRangeGenerator{
 	constructor(){
 	}
 
+
+	setPlayers(currentPlayer, oppositePlayer){
+		this.currentPlayer = currentPlayer;
+		this.players = [currentPlayer, oppositePlayer];
+	}
+
 	getCurrentPlayer(){
 		return this.currentPlayer;
 	}
 
+
 	getOppositePlayer(){
-		if (this.currentPlayer.name === 'player1'){
-			return this.players[1];
-		}
-		return this.players[0];
+
+		let opp =  this.players.filter(player => {
+			if (player.name !== this.currentPlayer.name){
+				return player;
+			}
+		});
+	return opp.pop();
 	}
+
 
 	switchPlayer(){
 		this.currentPlayer = this.getOppositePlayer(); 
 	}
 
+
 	computeRange(board, currentPlayer, oppositePlayer, checkStatus){
 		this.board = board; 
 
-		this.players = [currentPlayer, oppositePlayer]; 
-
-		this.currentPlayer = currentPlayer; 
-		this.oppositePlayer = oppositePlayer; 
+		this.setPlayers(currentPlayer, oppositePlayer);
 
 		let newPieces = this.currentPlayer.getPieces().map(piece =>{
 			piece.range = this.getRangeForPiece(piece, checkStatus); 
@@ -58,7 +67,12 @@ export default class MoveRangeGenerator{
 			this.computeKingMove(piece);
 		}
 		if (checkStatus){
-			this.removeMovesCausesCheck(piece);  
+			if (!this.isKingChecked()) {
+				this.removeMovesCausesCheck(piece);
+			}
+			else{
+				this.kingChecked(piece, this.isKingChecked());
+			}
 		}
 		return this.moveRange; 
 	}
@@ -69,7 +83,8 @@ export default class MoveRangeGenerator{
 
 		pieces.forEach(piece => { 
 			this.switchPlayer(); 
-			this.getRangeForPiece(piece);
+			piece.range = this.getRangeForPiece(piece);
+			this.board.updateElement(piece);
 			this.switchPlayer();  
 		});
 
@@ -92,7 +107,7 @@ export default class MoveRangeGenerator{
 		this.moveRange.forEach(kingRangePiece =>{
 			this.getOppositePlayer().getPieces().forEach(oppositePiece =>{
 				oppositePiece.range.forEach(oppRangePiece =>{
-					if (oppRangePiece.dataProp == kingRangePiece.dataProp){
+					if (oppRangePiece.dataProp === kingRangePiece.dataProp){
 						this.moveRange.delete(kingRangePiece);
 					}
 				});
@@ -112,13 +127,13 @@ export default class MoveRangeGenerator{
 
 		this.reComputeRangeForPieces(piecesThatCanEatMe); 
 
-		let pieceThatCanCheckMe = this.findPiecesCanCheckMe(); 
+		let pieceThatCanCheckMe = this.findPiecesCanCheckMe(piecesThatCanEatMe);
 
-		//console.log(pieceThatCanCheckMe);
-		this.undoTemporaryRemove(piece); 
+		this.undoTemporaryRemove(piece);
 
 		this.updateRange(pieceThatCanCheckMe);
 
+		this.reComputeRangeForPieces(piecesThatCanEatMe);
 
 	}
 
@@ -129,23 +144,68 @@ export default class MoveRangeGenerator{
 						return piece; 
 					}
 				}
-
 		});
 	}
 
 
-	findPiecesCanCheckMe(){
-		let myKing = this.getCurrentPlayer().getKing(); 
-		return this.findPiecesCanEatMyPiece(myKing); 
+	findPiecesCanCheckMe(piecesThatCanEatMe){
+		let myKing = this.getCurrentPlayer().getKing();
+
+		return piecesThatCanEatMe.filter(oppPiece => {
+			for (let oppRange of oppPiece.range){
+				if (oppRange.dataProp === myKing.dataProp){
+					return  oppRange;
+				}
+			}
+		});
 	}
+
+	isKingChecked(){
+		let myKing = this.getCurrentPlayer().getKing();
+		const oppPiecesCausingCheck = this.findPiecesCanEatMyPiece(myKing);
+		if (!oppPiecesCausingCheck.length){
+			return false;
+		}
+		return oppPiecesCausingCheck;
+	}
+
+
+	kingChecked(piece,oppPiecesCausingCheck){
+		if (piece.name === 'king'){
+
+		}
+		else{
+			this.allowPieceToBlockCheck(piece,oppPiecesCausingCheck);
+		}
+	}
+
+
+	allowPieceToBlockCheck(piece,oppPieceCausingCheck){
+		piece.range.forEach(pieceRange => {
+			oppPieceCausingCheck.forEach(oppPiece => {
+				pieceRange.belongsTo = this.getCurrentPlayer().name;
+				this.reComputeRangeForPieces(...oppPiece);
+				pieceRange.belongsTo = undefined;
+				if (this.)
+			})
+		})
+	}
+
+
 
 
 	updateRange(pieceThatCanCheckMe){
 		if (!pieceThatCanCheckMe.length){
 			return; 
 		}
-		this.moveRange = new Set(); 
-		this.moveRange.add(pieceThatCanCheckMe);
+		console.log(pieceThatCanCheckMe);
+		pieceThatCanCheckMe.forEach(oppPiece => {
+			for (let rangeMove of this.moveRange){
+				if (rangeMove.dataProp !== oppPiece.dataProp){
+					this.moveRange.delete(rangeMove);
+				}
+			}
+		});
 	}
 
 
