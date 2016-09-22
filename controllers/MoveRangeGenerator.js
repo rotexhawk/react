@@ -72,9 +72,6 @@ export default class MoveRangeGenerator{
 			}
 			else{
 				this.kingChecked(piece, this.isKingChecked());
-				if (piece.name === 'king'){
-					this.removeMovesCausesCheck(piece);
-				}
 			}
 			if (this.isCheckMate()){
 				console.log('You are fucked!');
@@ -213,7 +210,7 @@ export default class MoveRangeGenerator{
 		if (!pieceThatCanCheckMe.length){
 			return; 
 		}
-		//console.log(pieceThatCanCheckMe);
+
 		pieceThatCanCheckMe.forEach(oppPiece => {
 			for (let rangeMove of this.moveRange){
 				if (rangeMove.dataProp !== oppPiece.dataProp){
@@ -249,13 +246,14 @@ export default class MoveRangeGenerator{
 	}
 
 	isCheckMate(){
-		let checkMate = true;
+		let checkMate = false;
 		this.getCurrentPlayer().getPieces().some(currPiece =>{
 				if (currPiece.range.length > 0){
-					checkMate = false;
+					checkMate = true;
 				}
 		});
 		console.log('checkMate', checkMate);
+		return checkMate;
 	}
 
 	temporaryRemovePiece(piece){
